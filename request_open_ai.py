@@ -15,7 +15,6 @@ def generate_imgs_from_text(text,qtde:int=10,size_img:str='1024x1024'):
     }
     headers = {
         "Content-Type": "application/json",
-        #"Authorization": "Bearer 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"
         "Authorization": f"Bearer {os.getenv('OPENAI_API_KEY')}"
     }
 
