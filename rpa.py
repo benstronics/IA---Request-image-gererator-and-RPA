@@ -22,7 +22,7 @@ def get_src(elements):
     except Exception as e:
         logging.exception(e)
 
-def rpa_get_more_imgs(folder_imgs):
+def rpa_get_more_imgs(folder_imgs,images):
     # configurando argumentos para inicialização do chrome
     options = Options()
     options.add_experimental_option("prefs", {
@@ -43,7 +43,7 @@ def rpa_get_more_imgs(folder_imgs):
     driver = webdriver.Chrome(service=chrome_service, options=options)
 
     # Buscando imagens geradas pela IA
-    images = os.listdir(folder_imgs)
+    #images = os.listdir(folder_imgs)
 
     # Cria lista para armazenar os links de todas as imagens pesquisadas
     todos_links=[]
@@ -96,14 +96,18 @@ def rpa_get_more_imgs(folder_imgs):
             print(links_imgs)
 
             # Armazenandos os links
-            todos_links+=sum(links_imgs,[])
+            todos_links=sum(links_imgs,[])
+
+            ref.verificar_ou_criar_pasta('dfs')
+            df = pd.DataFrame(todos_links)
+            df.columns = ['links']
+            df.to_csv(os.getcwd() + f'\dfs\{image}.csv', sep=';')
+            print(len(todos_links))
+
         except Exception as e:
             logging.exception(e)
             continue
-    df = pd.DataFrame(todos_links)
-    df.columns = ['links']
-    df.to_csv(os.getcwd()+'\links_pesquisa.csv',sep=';')
-    print(len(todos_links))
+
     driver.quit()
     return todos_links
 

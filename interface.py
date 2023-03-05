@@ -1004,8 +1004,8 @@ class Interface(customtkinter.CTk):
                                            font=customtkinter.CTkFont(size=20))
             label_name_object[i].grid(row=offset_row +2 + i, column=0, padx=10, pady=10, sticky="ew")
 
-    def set_image_labels(self, folder_img, width,height, frame,offset_row):
-        global pos,image_path
+    def set_image_labels(self, folder_img, width,height, frame,offset_row,optional_func:object=None):
+        global pos,image_path,play
         pos=0
 
         images = os.listdir(folder_img)
@@ -1014,8 +1014,10 @@ class Interface(customtkinter.CTk):
             images=['logo.png']
         else:
             image_path = f'{str(Path.cwd())}\{folder_img}'
-        def next_image():
-            global pos,image_path
+        def next_image(stop_play:bool=False):
+            global pos,image_path,play_img
+            if stop_play:
+                play_img = False
             pos+=1
             if pos>=len(images):
                 pos=0
@@ -1025,9 +1027,16 @@ class Interface(customtkinter.CTk):
             label = customtkinter.CTkLabel(frame, text='', image=image, compound="center",
                                            )
             label.grid(row=offset_row + 1, column=0, padx=10, pady=10, sticky="ew")
+            if play_img:
+                self.after(100,play)
+        def play():
+            global play_img
+            #for i in range(len(images)):
+            play_img=True
+            self.after(100,next_image)
 
-
-
+        global play_img
+        play_img = False
         img = images[pos] if pos < len(images) else images[0]
         img_label = customtkinter.CTkImage(Image.open(os.path.join(image_path, img)), size=(width, height))
         image = copy.copy(img_label)
@@ -1036,9 +1045,14 @@ class Interface(customtkinter.CTk):
         label.grid(row=offset_row+1, column=0, padx=10, pady=10, sticky="ew")
 
         button = customtkinter.CTkButton(frame, text="Avançar",
-                                         command=next_image,
+                                         command=partial(next_image,True),
                                          width=200)
         button.grid(row=offset_row + 2, column=0, padx=30, pady=(15, 15))
+
+        button2 = customtkinter.CTkButton(frame, text="Play",
+                                         command=play,
+                                         width=200)
+        button2.grid(row=offset_row + 3, column=0, padx=30, pady=(15, 15))
 
 
     def ask_user(self,msg:str='Digite algo?',titulo:str='Informar'):
