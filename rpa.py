@@ -11,6 +11,9 @@ from selenium.webdriver import ActionChains
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from referencias import Referencias
+
+ref = Referencias()
 
 def get_src(elements):
     try:
@@ -32,7 +35,9 @@ def rpa_get_more_imgs(folder_imgs):
         "download.extensions_to_open": "applications/pdf",
         'plugins.always_open_pdf_externally': True
     })
-    #options.add_argument('headless')
+    headless = str(ref.criar_filtros([0], ['headless'], 'filtro_chromedriver_headless')['headless'][0]).strip()
+    if int(headless)==1:
+        options.add_argument('headless')
     chrome_service = Service(ChromeDriverManager(path=os.getcwd()).install())
     chrome_service.creationflags = CREATE_NO_WINDOW
     driver = webdriver.Chrome(service=chrome_service, options=options)
@@ -99,6 +104,7 @@ def rpa_get_more_imgs(folder_imgs):
     df.columns = ['links']
     df.to_csv(os.getcwd()+'\links_pesquisa.csv',sep=';')
     print(len(todos_links))
+    driver.quit()
     return todos_links
 
 

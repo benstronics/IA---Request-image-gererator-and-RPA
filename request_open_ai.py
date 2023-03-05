@@ -3,7 +3,7 @@ import requests
 import json
 import rpa
 
-def generate_imgs_from_text(text,qtde:int=10,size_img:str='1024x1024'):
+def generate_imgs_from_text(text,qtde:int=10,size_img:str='1024x1024',key:str=''):
     url = "https://api.openai.com/v1/images/generations"
 
     querystring = {"":""}
@@ -15,7 +15,7 @@ def generate_imgs_from_text(text,qtde:int=10,size_img:str='1024x1024'):
     }
     headers = {
         "Content-Type": "application/json",
-        "Authorization": f"Bearer {os.getenv('OPENAI_API_KEY')}"
+        "Authorization": f"Bearer {key}"
     }
 
     response = requests.request("POST", url, json=payload, headers=headers, params=querystring)
