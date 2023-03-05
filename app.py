@@ -19,19 +19,18 @@ def gerar_imgs(*args):
         qtde = str(gui.ask_user('Quantas Imagens?')).strip()
         if len(qtde)>0:
             break
-    while True:
-        dimensoes = str(gui.ask_user('Dimensões das Imagens? ex: (1024x1024)')).strip()
-        if len(dimensoes)>0 and len(dimensoes.lower().split('x')) == 2:
-            break
+
+    dimensoes = '512x512'
     links = ia.generate_imgs_from_text(frase,int(qtde),dimensoes)
     ia.downloads_imgs_links(links,'imgs_geradas','img_gerada')
+    gui.after(1000, update_label)
     gui.info('Processo finalizado!')
 
 def pesquisar_imgs(*args):
     links_pesquisa = rpa.rpa_get_more_imgs('imgs_geradas')
     links_pesquisa = [link for link in links_pesquisa if not 'favicon' in link and not 'fonts.gstatic' in link]
     print(len(links_pesquisa))
-    gui.info('Processo finalizado!')
+    gui.info(f'{len(links_pesquisa)} imagens encontradas'if len(links_pesquisa)>1 else f'{len(links_pesquisa)} imagem encontrada')
 
 def baixar_imgs_pesquisadas():
     df = pd.read_csv(os.getcwd()+'\links_pesquisa.csv',sep=';')
@@ -51,18 +50,29 @@ def thread_download(*args):
         if len(qtde_p) > 0:
             break
     td.Thread(target=baixar_imgs_pesquisadas).start()
+    global nome_pasta
+    nome_pasta = "imgs_pesquisadas"
+    gui.after(1000, update_label)
 
 
 def process_imgs(*args):
+    global nome_pasta
+    nome_pasta = "img_processadas"
+    gui.after(1000,update_label)
     ps.process_imgs('imgs_pesquisadas')
+    nome_pasta = "img_processadas"
+    gui.after(1000, update_label)
     gui.info('Processo finalizado!')
 
 def update_label():
-    gui.set_image_labels('imgs_geradas',600,300,gui.home_frame,6)
+
+    gui.set_image_labels(nome_pasta,600,300,gui.home_frame,6)
     #gui.after(1000, update_label)
 
 def app(title):
     global gui
+    global nome_pasta
+    nome_pasta = "imgs_geradas"
     while True:
         gui = Interface(title=title)
         gui.create_menu_buttons(4,['GERAR IMAGEM A PARTIR DE TEXTO','PESQUISAR IMAGENS SEMELHANTES','BAIXAR IMAGENS ENCONTRADAS','PROCESSAR IMAGENS BAIXADAS'],[gerar_imgs,pesquisar_imgs,thread_download,process_imgs])

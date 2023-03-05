@@ -1005,16 +1005,20 @@ class Interface(customtkinter.CTk):
             label_name_object[i].grid(row=offset_row +2 + i, column=0, padx=10, pady=10, sticky="ew")
 
     def set_image_labels(self, folder_img, width,height, frame,offset_row):
-        images = os.listdir(folder_img)
-        global pos
+        global pos,image_path
         pos=0
 
+        images = os.listdir(folder_img)
+        if len(images)==0:
+            image_path = f'{str(Path.cwd())}\images'
+            images=['logo.png']
+        else:
+            image_path = f'{str(Path.cwd())}\{folder_img}'
         def next_image():
-            global pos
+            global pos,image_path
             pos+=1
             if pos>=len(images):
                 pos=0
-            image_path = f'{str(Path.cwd())}\{folder_img}'
             img = images[pos]
             img_label = customtkinter.CTkImage(Image.open(os.path.join(image_path, img)), size=(width, height))
             image = copy.copy(img_label)
@@ -1023,7 +1027,7 @@ class Interface(customtkinter.CTk):
             label.grid(row=offset_row + 1, column=0, padx=10, pady=10, sticky="ew")
 
 
-        image_path = f'{str(Path.cwd())}\{folder_img}'
+
         img = images[pos] if pos < len(images) else images[0]
         img_label = customtkinter.CTkImage(Image.open(os.path.join(image_path, img)), size=(width, height))
         image = copy.copy(img_label)

@@ -2,9 +2,14 @@ import os
 from PIL import Image
 import cv2
 import numpy as np
+from referencias import Referencias
+
+ref = Referencias()
 
 def process_imgs(folder,alpha:float=1,beta:int=15):
     images_pesquisa = os.listdir(os.getcwd() + f'\{folder}')
+    alpha = ref.criar_filtros([alpha],['alpha(1.0-3.0)'],'filtro_contrast control (1.0-3.0)')['alpha(1.0-3.0)'][0]
+    beta = ref.criar_filtros([beta],['beta(0-100)'],'filtro_brightness control (0-100)')['beta(0-100)'][0]
 
     if not os.path.exists(os.getcwd() + '\img_processadas'):
         os.mkdir('img_processadas')
