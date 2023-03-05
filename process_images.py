@@ -8,8 +8,8 @@ ref = Referencias()
 
 def process_imgs(folder,alpha:float=1,beta:int=15):
     images_pesquisa = os.listdir(os.getcwd() + f'\{folder}')
-    alpha = ref.criar_filtros([alpha],['alpha(1-3)'],'filtro_contrast control (1-3)')['alpha(1-3)'][0]
-    beta = ref.criar_filtros([beta],['beta(0-100)'],'filtro_brightness control (0-100)')['beta(0-100)'][0]
+    alpha = float(str(ref.criar_filtros([alpha],['alpha(1-3)'],'filtro_contrast control (1-3)')['alpha(1-3)'][0]).strip())
+    beta = int(str(ref.criar_filtros([beta],['beta(0-100)'],'filtro_brightness control (0-100)')['beta(0-100)'][0]).strip())
 
     if not os.path.exists(os.getcwd() + '\img_processadas'):
         os.mkdir('img_processadas')

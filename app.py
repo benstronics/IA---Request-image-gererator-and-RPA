@@ -92,9 +92,10 @@ def app(title):
     global gui,ref
     global nome_pasta,key
     nome_pasta = "imgs_geradas"
+    gui = Interface(title=title)
+    ref = Referencias(gui=gui)
     while True:
-        gui = Interface(title=title)
-        ref = Referencias(gui=gui)
+        ref.verificar_ou_criar_pasta(nome_pasta)
         key = ref.descriptografar_dados(ref.criar_credenciais('openai_api_key', ['api_key'])['API_KEY'])
         gui.create_menu_buttons(4,['GERAR IMAGEM A PARTIR DE TEXTO','PESQUISAR IMAGENS SEMELHANTES','BAIXAR IMAGENS ENCONTRADAS','PROCESSAR IMAGENS BAIXADAS'],[gerar_imgs,pesquisar_imgs,thread_download,process_imgs])
         gui.after(1000,update_label)
