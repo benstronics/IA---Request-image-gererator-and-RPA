@@ -8,6 +8,7 @@ Phone: (65)9-8445-5091
 
 import app
 
+# Função principal que executa o app
 def main():
     app.app('Benstronics')
 

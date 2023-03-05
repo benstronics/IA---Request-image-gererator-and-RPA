@@ -23,7 +23,7 @@ class Interface(customtkinter.CTk):
         suplying process options activities to be chosen by them.
         :param str color_theme = 'dark-blue'
     """
-    def __init__(self,super_init:bool=True,color_theme:str="dark-blue",default_frame:str='home',appearance_mode:str="Dark",dimentions:str='800x800+100+100',title:str='Application'):
+    def __init__(self,super_init:bool=True,color_theme:str="green",default_frame:str='home',appearance_mode:str="Dark",dimentions:str='800x700+0+0',title:str='Application'):
         self.color_theme = color_theme
         self.frame = default_frame
         self.appearance_mode = appearance_mode
@@ -35,12 +35,13 @@ class Interface(customtkinter.CTk):
         self.dimentions = dimentions
         self.table=None
         self.name_table=''
+        self.titulo = title
 
         # define standard table dimention
         self.colunas_entry = None
         self.linhas_entry = None
 
-        self.color_theme=self.criar_arquivo_cor_interface('color_theme','dark-blue')
+        self.color_theme=self.criar_arquivo_cor_interface('color_theme','green')
         self.appearance_mode = self.criar_arquivo_cor_interface('appearance_mode', 'Dark')
         customtkinter.set_default_color_theme(self.color_theme)  # Themes: "blue" (standard), "green", "dark-blue"
         customtkinter.set_appearance_mode(self.appearance_mode)  # Modes: "System" (standard), "Dark", "Light"
@@ -48,7 +49,7 @@ class Interface(customtkinter.CTk):
         if super_init:
             super().__init__()
 
-        self.title(title)
+        self.title(self.titulo)
         self.geometry(self.dimentions)#800x800+100+100#+0+0
 
         # set grid layout 1x2
@@ -1026,7 +1027,9 @@ class Interface(customtkinter.CTk):
             image = copy.copy(img_label)
             label = customtkinter.CTkLabel(frame, text='', image=image, compound="center",
                                            )
-            label.grid(row=offset_row + 1, column=0, padx=10, pady=10, sticky="ew")
+            label.grid(row=offset_row + 1, column=0, padx=10, pady=10, sticky="nsew")
+            # label.grid_rowconfigure(0, weight=1)
+            # label.grid_columnconfigure(0, weight=1)
             if play_img:
                 self.after(100,play)
         def play():
@@ -1040,19 +1043,28 @@ class Interface(customtkinter.CTk):
         img = images[pos] if pos < len(images) else images[0]
         img_label = customtkinter.CTkImage(Image.open(os.path.join(image_path, img)), size=(width, height))
         image = copy.copy(img_label)
-        label = customtkinter.CTkLabel(frame, text='', image=image, compound="center",
-                                       )
-        label.grid(row=offset_row+1, column=0, padx=10, pady=10, sticky="ew")
+        label = customtkinter.CTkLabel(frame, text='', image=image, compound="center")
+        label.grid(row=offset_row+1, column=0, padx=10, pady=10, sticky="nsew")
+        # label.grid_rowconfigure(0, weight=1)
+        # label.grid_columnconfigure(0, weight=1)
 
         button = customtkinter.CTkButton(frame, text="Avançar",
                                          command=partial(next_image,True),
                                          width=200)
-        button.grid(row=offset_row + 2, column=0, padx=30, pady=(15, 15))
+        button.grid(row=offset_row + 2, column=0, padx=10, pady=10)
 
         button2 = customtkinter.CTkButton(frame, text="Play",
                                          command=play,
                                          width=200)
-        button2.grid(row=offset_row + 3, column=0, padx=30, pady=(15, 15))
+        button2.grid(row=offset_row + 3, column=0, padx=10, pady=10)
+
+    def create_menu_lista(self,frame,lista_options,function_comand,offset_row:int=0,offset_column:int=0):
+        def set_function(option):
+            function_comand(option)
+        menu = customtkinter.CTkOptionMenu(frame,
+                                                             values=lista_options,
+                                                             command=set_function)
+        menu.grid(row=offset_row, column=offset_column, padx=10, pady=10, sticky="nsew")
 
 
     def ask_user(self,msg:str='Digite algo?',titulo:str='Informar'):

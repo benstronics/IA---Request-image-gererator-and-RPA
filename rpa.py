@@ -79,6 +79,7 @@ def rpa_get_more_imgs(folder_imgs,images):
 
             # Envia a imagem para pesquisa
             WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="ow6"]/div[3]/c-wiz/div[2]/div/div[3]/div[2]/div/div[2]/span')))
+            time.sleep(5)
             inputs = driver.find_elements(By.TAG_NAME, 'input')
             inputs[8].send_keys(path_img)
 
@@ -106,10 +107,10 @@ def rpa_get_more_imgs(folder_imgs,images):
 
         except Exception as e:
             logging.exception(e)
-            continue
+            #continue
 
     driver.quit()
-    return todos_links
+    #return todos_links
 
 
 
